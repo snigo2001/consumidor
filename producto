@@ -1,0 +1,17 @@
+from kafka import KafkaProducer
+import json
+import time
+
+producer = KafkaProducer(
+    bootstrap_servers='localhost:9092',
+    value_serializer=lambda m: json.dumps(m).encode('utf-8')
+)
+
+# Simulando envío de mensajes
+for i in range(5):
+    mensaje = {"video_id": i, "accion": "procesar", "timestamp": time.time()}
+    producer.send('video-jobs', mensaje)
+    print(f"✅ Mensaje enviado: {mensaje}")
+    time.sleep(1)  # para que no los mande todos al instante
+
+producer.flush()
